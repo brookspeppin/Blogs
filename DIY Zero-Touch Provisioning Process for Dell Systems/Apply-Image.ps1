@@ -49,7 +49,7 @@ function Driver-Download {
         mkdir "$usb\Dell\"
     }
     try {
-        Invoke-WebRequest -URi $source -OutFile $catalog -Proxy http://proxy.schwab.com:8080 -UseBasicParsing -Verbose
+        Invoke-WebRequest -URi $source -OutFile $catalog -Verbose
     }
     catch {
         Write-Log -Message "Error downloading dell catalog file. Error: $PSItem " -fail
@@ -94,7 +94,7 @@ function Driver-Download {
         if ($hash.hash -ne $cabSelected.hashMD5) {
             try {
                 Write-Log "Hashes don't match, redownloading Dell Driver pack for $model..."
-                Invoke-WebRequest -URi $cabsource -OutFile $destination -Proxy http://proxy.schwab.com:8080 -UseBasicParsing
+                Invoke-WebRequest -URi $cabsource -OutFile $destination -UseBasicParsing
                 $hash = Get-FileHash $destination -Algorithm MD5
                 Write-Log "Updated file hash: $(@($hash.hash))"
             }
@@ -115,7 +115,7 @@ function Driver-Download {
         }
         try {
             Write-Log "Driver cab missing from USB. Downloading Dell Driver pack for $model..."
-            Invoke-WebRequest -URi $cabsource -OutFile $destination -Proxy http://proxy.schwab.com:8080 -UseBasicParsing
+            Invoke-WebRequest -URi $cabsource -OutFile $destination -UseBasicParsing
         }
         catch {
             write-log "Ran into an issue: $PSItem" -fail

@@ -1,5 +1,5 @@
 #Created by Brooks Peppin, www.brookspeppin.com
-#Updated 1/19/22
+#Updated 1/28/22
 
 #Initializing Variables
 $dir = "C:\WinPE"
@@ -59,48 +59,5 @@ Dism /Add-Package /Image:"$mountpath" /PackagePath:"$packagepath\en-us\WinPE-Dis
 $(@('@for %%a in (C D E F G H) do @if exist %%a:\Apply-Image.ps1 set BOOTDRIVE=%%a')) | out-file "$mountpath\windows\system32\startnet.cmd" -Force -Encoding ASCII -Append
 'powershell -executionpolicy bypass -file %BOOTDRIVE%:\Apply-Image.ps1' | out-file "$mountpath\windows\system32\startnet.cmd" -Append -Encoding ASCII
 
-
-#Copying Provisioning Files
-if(!(Test-Path "$mountpath\Provisioning"))
-{
-    mkdir $mountpath\Provisioning
-}
-
-$boot = (get-volume | Where FileSystemLabel -eq "BOOT").DriveLetter + ":"; $boot
-#copying CCTK, Apply-Image, Unattend.xml
-xcopy "$dir\cctk" "$mountpath\Provisioning" /f /y
-xcopy "$dir\Apply-Image.ps1" $boot /f /y
-xcopy "$dir\Apply-Image.ps1" "\\us\dsm\Incoming\EndPointEngineering\ProvisioningV2" /f /y
-
-xcopy "$dir\unattend.xml" "$boot" /f /y
-
-xcopy "$dir\unattend.xml" "\\us\dsm\Incoming\EndPointEngineering\ProvisioningV2" /f /y
-
-
-$Parms = @{
-    Path = "C:\WinPe\Apply-Image1.ps1"
-    Version = "1.1"
-    Author = "brooks.peppin@schwab.com"
-    Description = "BigFix Provisioning v2 - Custom WinPE"
-    }
-  New-ScriptFileInfo @Parms
-
-
 #Saving Changes
 Dism /Unmount-Image /MountDir:$mountpath /commit
-
-#Copy to USB
-xcopy $source "$boot\sources" /f /y
-
-#Repair
-$boot = (get-volume | Where FileSystemLabel -eq "BOOT").DriveLetter + ":"; $boot
-#$Eject =  New-Object -comObject Shell.Application
-#$Eject.NameSpace(17).ParseName("D:").InvokeVerb("Eject")
-
-Get-Volume -FileSystemLabel Data | Repair-Volume
-Get-Volume -FileSystemLabel Boot | Repair-Volume
-
-
-$cabsource = "http://downloads.dell.com/FOLDER07789781M/1/7090-win10-A03-P45W8.CAB"
-$destination = "C:\temp1\7090-win10-A03-P45W8.CAB"
-Invoke-WebRequest -URi $cabsource -OutFile $destination -Proxy http://proxy.schwab.com:8080 -UseBasicParsing

@@ -184,7 +184,7 @@ if ($make -like "Dell*") {
     Driver-Download
     #CCTK
 
-    cd "X:\Provisioning\"
+    cd "X:\CCTK\"
 
     Write-Log "Applying CCTK. Log also set to C:\Temp\cctk.log"
     # ThunderBolt Docks Connection Options

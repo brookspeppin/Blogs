@@ -1,4 +1,6 @@
 #Initializing Variables
+#Brooks Peppin - www.brookspeppin.com
+# x/Twitter - @brookspeppin
 
 $WinPE_amd64 = "C:\WinPE_amd64"
 
@@ -82,7 +84,7 @@ Dism /Unmount-Image /MountDir:$mountpath /commit
  
 
 #make it no prompt
-
+#credit nick richardson - https://spiderzebra.com/
 $ADKPath = (Get-ItemProperty -Path "HKLM:\Software\WOW6432Node\Microsoft\Windows Kits\Installed Roots").KitsRoot10 + "Assessment and Deployment Kit\Deployment Tools"
 
 $oscdimg = $ADKPath + "\amd64\Oscdimg\oscdimg.exe"
